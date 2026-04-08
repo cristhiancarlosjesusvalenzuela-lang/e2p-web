@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>E2P Web | Evaluación de Competencias Parentales</title>
+  <title>E2P V2, TABULACION</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; }
@@ -109,18 +109,6 @@
 
     .card h2 { font-size: 1.45rem; }
     .card h3 { font-size: 1.2rem; }
-
-    .muted {
-      color: var(--muted);
-      line-height: 1.65;
-      font-size: 0.98rem;
-    }
-
-    .intro-text {
-      margin-top: 8px;
-      color: white;
-      max-width: 980px;
-    }
 
     .form-grid {
       display: grid;
@@ -354,25 +342,25 @@
     @media (max-width: 680px) {
       .card { padding: 18px; border-radius: 20px; }
       header { padding: 42px 18px 40px; }
-      .toolbar button, .toolbar select, .action-buttons button, .field input, .field select { width: 100%; }
+      .toolbar button, .action-buttons button, .field input, .field select { width: 100%; }
       input[type="number"] { width: 76px; }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>E2P Web</h1>
-    <p class="intro-text">La Escala de Evaluación de Competencias Parentales, E2P, es un instrumento orientado a valorar competencias vinculares, formativas, protectoras y reflexivas en adultos responsables del cuidado de niños, niñas y adolescentes. Esta versión web permite registrar puntajes, obtener resultados automáticos y generar un texto útil para incorporar en informes profesionales.</p>
+    <h1>E2P V2, TABULACION</h1>
+    <p>La Escala de Evaluación de Competencias Parentales, E2P, es un instrumento orientado a valorar competencias vinculares, formativas, protectoras y reflexivas en adultos responsables del cuidado de niños, niñas y adolescentes.</p>
   </header>
 
   <main>
     <div class="layout">
       <section class="card">
-        <h2>Datos de identificación</h2>
+        <h2>Datos de la persona evaluada</h2>
 
         <div class="form-grid">
           <div class="field">
-            <label for="nombreEvaluada">Nombre de la adulta evaluada</label>
+            <label for="nombreEvaluada">Nombre de la persona evaluada</label>
             <input type="text" id="nombreEvaluada" placeholder="Ej. María González" />
           </div>
           <div class="field">
@@ -563,17 +551,14 @@
       if (!input) return;
       const value = normalizarValor(input.value);
       const responseCell = document.getElementById(`r${i}`);
-      const correctedCell = document.getElementById(`c${i}`);
 
       if (value === null) {
         responseCell.innerHTML = '<span class="small">Sin respuesta</span>';
-        correctedCell.innerHTML = '<span class="small">-</span>';
         return;
       }
 
       input.value = value;
       responseCell.textContent = responseMap[value];
-      correctedCell.textContent = correctedScore(value);
     }
 
     function buildItems() {
@@ -591,7 +576,6 @@
                   <th>Ítem</th>
                   <th>Puntaje</th>
                   <th>Respuesta automática</th>
-                  <th>Puntaje corregido</th>
                 </tr>
               </thead>
               <tbody>
@@ -603,7 +587,6 @@
               <td><strong>Ítem ${i}</strong></td>
               <td><input type="number" min="0" max="4" id="p${i}" placeholder="0" oninput="actualizarFila(${i})"></td>
               <td id="r${i}"><span class="small">Sin respuesta</span></td>
-              <td id="c${i}"><span class="small">-</span></td>
             </tr>
           `;
         }
@@ -709,7 +692,7 @@
 
         texto = `Perfil de competencias parentales del tramo ${cfg.label}: Vinculares (${vinc}), Formativas (${form}), Protectoras (${prot}) y Reflexivas (${refl}). De acuerdo con la tabulación E2P, el perfil global se ubica en ${zonaGlobal}.`;
 
-        cuadro = `Nombre de la adulta evaluada: ${datos.nombre || 'No ingresado'}
+        cuadro = `Nombre de la persona evaluada: ${datos.nombre || 'No ingresado'}
 Edad: ${datos.edad || 'No ingresada'}
 Parentesco: ${datos.parentesco || 'No ingresado'}
 Rango etario evaluado: ${cfg.label}
@@ -767,7 +750,6 @@ ${texto}`;
         if (!input) continue;
         input.value = '';
         document.getElementById(`r${i}`).innerHTML = '<span class="small">Sin respuesta</span>';
-        document.getElementById(`c${i}`).innerHTML = '<span class="small">-</span>';
       }
       limpiarResumen();
     }
@@ -813,16 +795,7 @@ ${texto}`;
       doc.save(`resultado-e2p-${cfg.label.replace(/\s+/g, '-').replace(/–/g, '-')}.pdf`);
     }
 
-    function runSelfTests() {
-      console.assert(getCategory(2) === 'Baja frecuencia', 'Decil 2 debe ser Baja frecuencia');
-      console.assert(getCategory(4) === 'Frecuencia intermedia', 'Decil 4 debe ser Frecuencia intermedia');
-      console.assert(getCategory(6) === 'Alta frecuencia', 'Decil 6 debe ser Alta frecuencia');
-      console.assert(ageGroups['8-12 años'].areas[0].maxResponded === 14, '8–12 años Vinculares debe tener 14 ítems');
-      console.assert(ageGroups['13-17 años'].itemCount === 56, '13–17 años debe tener 56 ítems');
-    }
-
     buildItems();
-    runSelfTests();
   </script>
 </body>
 </html>
