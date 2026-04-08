@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E2P Web | Todos los rangos etarios</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --bg: #eef4ff;
+      --bg-soft: #f8fbff;
+      --card: rgba(255,255,255,0.82);
+      --card-strong: rgba(255,255,255,0.94);
+      --text: #172033;
+      --muted: #667085;
+      --line: rgba(148, 163, 184, 0.22);
+      --primary: #2563eb;
+      --primary-2: #4f46e5;
+      --shadow: 0 20px 45px rgba(37, 99, 235, 0.10);
+      --radius: 24px;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(79, 70, 229, 0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(37, 99, 235, 0.16), transparent 24%),
+        linear-gradient(180deg, #eff5ff 0%, #f7faff 40%, #edf4ff 100%);
+      color: var(--text);
+    }
+
+    header {
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #1d4ed8 0%, #4f46e5 55%, #2563eb 100%);
+      color: white;
+      padding: 54px 20px 48px;
+      text-align: center;
+      box-shadow: inset 0 -1px 0 rgba(255,255,255,0.12);
+    }
+
+    header::before,
+    header::after {
+      content: '';
+      position: absolute;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+      filter: blur(4px);
+    }
+
+    header::before {
+      width: 240px;
+      height: 240px;
+      top: -80px;
+      right: -40px;
+    }
+
+    header::after {
+      width: 180px;
+      height: 180px;
+      bottom: -70px;
+      left: -40px;
+    }
+
+    header h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2rem, 3.8vw, 3rem);
+      letter-spacing: -0.03em;
+    }
+
+    header p {
+      margin: 0 auto;
+      max-width: 960px;
+      line-height: 1.65;
+      font-size: 1.02rem;
+      opacity: 0.96;
+    }
+
+    main {
+      max-width: 1360px;
+      margin: -24px auto 0;
+      padding: 0 20px 28px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.9fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    .card h2, .card h3 {
+      margin: 0 0 12px;
+      letter-spacing: -0.02em;
+    }
+
+    .card h2 { font-size: 1.45rem; }
+    .card h3 { font-size: 1.2rem; }
+
+    .muted {
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.98rem;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+      align-items: center;
+    }
+
+    .toolbar button {
+      border: none;
+      border-radius: 16px;
+      padding: 13px 18px;
+      font-weight: 700;
+      font-size: 0.96rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+      color: white;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.24);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    }
+
+    .toolbar button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(37, 99, 235, 0.28);
+    }
+
+    .toolbar button.secondary {
+      background: rgba(255,255,255,0.85);
+      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.20);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.07);
+    }
+
+    .toolbar select {
+      padding: 13px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.25);
+      background: rgba(255,255,255,0.9);
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: #172033;
+      min-width: 240px;
+      box-shadow: 0 10px 22px rgba(15,23,42,0.06);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      background: rgba(255,255,255,0.86);
+      color: var(--primary);
+      border: 1px solid rgba(37, 99, 235, 0.14);
+      border-radius: 999px;
+      padding: 9px 14px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(37, 99, 235, 0.08);
+    }
+
+    .pill::before {
+      content: '●';
+      font-size: 0.72rem;
+    }
+
+    .area-title {
+      margin: 26px 0 12px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(37,99,235,0.10), rgba(79,70,229,0.10));
+      font-weight: 800;
+      border: 1px solid rgba(37, 99, 235, 0.10);
+      color: #1e3a8a;
+      letter-spacing: -0.01em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      margin-top: 8px;
+      font-size: 0.95rem;
+      background: rgba(255,255,255,0.72);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+    }
+
+    th, td {
+      border-bottom: 1px solid rgba(148,163,184,0.14);
+      padding: 12px 10px;
+      text-align: left;
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody tr:nth-child(even) {
+      background: rgba(248, 250, 252, 0.55);
+    }
+
+    tbody tr:hover {
+      background: rgba(37, 99, 235, 0.045);
+    }
+
+    th {
+      background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: #334155;
+    }
+
+    input[type="number"] {
+      width: 88px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(255,255,255,0.96);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+    }
+
+    input[type="number"]:focus {
+      border-color: rgba(37, 99, 235, 0.45);
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+      transform: translateY(-1px);
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 20px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .metric {
+      background: var(--card-strong);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+    }
+
+    .metric .label {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+
+    .metric .value {
+      font-size: 1.18rem;
+      font-weight: 800;
+      line-height: 1.35;
+      letter-spacing: -0.02em;
+    }
+
+    .alert-box, .text-box {
+      margin-top: 16px;
+      border-radius: 20px;
+      padding: 16px 18px;
+      line-height: 1.65;
+      box-shadow: 0 12px 24px rgba(15, 23, 42, 0.05);
+    }
+
+    .alert-box {
+      background: linear-gradient(135deg, rgba(245,158,11,0.10), rgba(251,191,36,0.12));
+      border: 1px solid rgba(245, 158, 11, 0.22);
+    }
+
+    .text-box {
+      background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(79,70,229,0.09));
+      border: 1px solid rgba(37, 99, 235, 0.16);
+    }
+
+    .small {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1024px) {
+      .layout { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: 1fr; }
+      main { margin-top: -18px; }
+    }
+
+    @media (max-width: 680px) {
+      .card { padding: 18px; border-radius: 20px; }
+      header { padding: 42px 18px 40px; }
+      .toolbar button, .toolbar select { width: 100%; }
+      input[type="number"] { width: 76px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>E2P Web por rango etario</h1>
+    <p>Versión web construida desde tu Excel. Incluye herramientas para 0–3 meses, 4–10 meses, 11–18 meses, 19–36 meses, 3–5 años, 6–7 años, 8–12 años y 13–17 años.</p>
+  </header>
+
+  <main>
+    <div class="layout">
+      <section class="card">
+        <h2>Ingreso de puntajes por tramo</h2>
+        <p class="muted">La página cambia de herramienta según el rango etario. Por ahora usa <strong>ítem 1–n</strong> porque el archivo no trae visibles los enunciados en esta vista, pero la lógica de cálculo sí está incorporada.</p>
+
+        <div class="toolbar" style="margin-top:12px; margin-bottom:4px;">
+          <select id="ageSelector" onchange="changeAgeGroup()">
+            <option value="0-3 meses">0–3 meses</option>
+            <option value="4-10 meses">4–10 meses</option>
+            <option value="11-18 meses">11–18 meses</option>
+            <option value="19-36 meses">19–36 meses</option>
+            <option value="3-5 años">3–5 años</option>
+            <option value="6-7 años">6–7 años</option>
+            <option value="8-12 años">8–12 años</option>
+            <option value="13-17 años">13–17 años</option>
+          </select>
+          <span class="pill" id="activeAgePill">Tramo activo: 0–3 meses</span>
+        </div>
+
+        <div class="toolbar">
+          <button onclick="calcularTodo()">Calcular resultado</button>
+          <button class="secondary" onclick="limpiarTodo()">Limpiar</button>
+        </div>
+
+        <div id="itemsContainer"></div>
+      </section>
+
+      <aside>
+        <section class="card">
+          <h3>Resumen automático</h3>
+          <div class="summary-grid" id="summaryGrid"></div>
+          <div class="alert-box" id="alertaClinica">Aún sin calcular.</div>
+          <div class="text-box" id="textoInforme">Aún sin calcular.</div>
+        </section>
+
+        <section class="card">
+          <h3>Qué ya está hecho</h3>
+          <p class="small">✔ Selector de rango etario<br>✔ Respuesta automática<br>✔ Puntaje corregido según tramo<br>✔ Deciles por tramo<br>✔ Categorías por área<br>✔ Zona global<br>✔ Alerta clínica<br>✔ Texto breve para informe</p>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    const responseMap = {
+      0: 'Nunca',
+      1: 'Casi nunca',
+      2: 'A veces',
+      3: 'Casi siempre',
+      4: 'Siempre'
+    };
+
+    const ageGroups = {
+      '0-3 meses': {
+        label: '0–3 meses',
+        itemCount: 60,
+        correction: 'special03',
+        areas: [
+          { key: 'Vinculares', start: 1, end: 15, lookup: [0,48,51,53,54,55,57,58,59,60] },
+          { key: 'Formativas', start: 16, end: 30, lookup: [0,46,51,53,54,56,57,58,59,60] },
+          { key: 'Protectoras', start: 31, end: 45, lookup: [0,51,53,54,55,56,56,57,58,59] },
+          { key: 'Reflexivas', start: 46, end: 60, lookup: [0,45,49,52,53,54,56,57,58,59] }
+        ],
+        totalLookup: [0,196,204,212,216,221,225,228,230,235]
+      },
+      '4-10 meses': {
+        label: '4–10 meses',
+        itemCount: 60,
+        correction: 'normal',
+        areas: [
+          { key: 'Vinculares', start: 1, end: 15, lookup: [0,49,52,55,56,57,57,58,59,60] },
+          { key: 'Formativas', start: 16, end: 30, lookup: [0,46,49,52,53,54,55,57,58,59] },
+          { key: 'Protectoras', start: 31, end: 45, lookup: [0,45,49,51,52,54,55,56,58,59] },
+          { key: 'Reflexivas', start: 46, end: 60, lookup: [0,43,46,50,51,53,54,56,57,59] }
+        ],
+        totalLookup: [0,190,201,207,212,217,221,225,228,233]
+      },
+      '11-18 meses': {
+        label: '11–18 meses',
+        itemCount: 60,
+        correction: 'normal',
+        areas: [
+          { key: 'Vinculares', start: 1, end: 15, lookup: [0,51,53,55,56,58,58,59,60,60] },
+          { key: 'Formativas', start: 16, end: 30, lookup: [0,47,50,52,54,55,56,57,58,59] },
+          { key: 'Protectoras', start: 31, end: 45, lookup: [0,48,51,52,54,55,56,57,58,59] },
+          { key: 'Reflexivas', start: 46, end: 60, lookup: [0,43,45,48,50,51,53,55,56,58] }
+        ],
+        totalLookup: [0,191,203,209,214,218,222,225,228,233]
+      },
+      '19-36 meses': {
+        label: '19–36 meses',
+        itemCount: 60,
+        correction: 'normal',
+        areas: [
+          { key: 'Vinculares', start: 1, end: 15, lookup: [0,45,49,50,52,53,54,56,57,59] },
+          { key: 'Formativas', start: 16, end: 30, lookup: [0,42,46,48,50,52,54,55,57,58] },
+          { key: 'Protectoras', start: 31, end: 45, lookup: [0,43,47,48,50,51,53,54,56,58] },
+          { key: 'Reflexivas', start: 46, end: 60, lookup: [0,40,45,47,49,51,52,54,55,57] }
+        ],
+        totalLookup: [0,174,187,196,202,207,211,217,222,229]
+      },
+      '3-5 años': {
+        label: '3–5 años',
+        itemCount: 60,
+        correction: 'normal',
+        areas: [
+          { key: 'Vinculares', start: 1, end: 15, lookup: [0,47,50,52,54,55,56,57,58,59] },
+          { key: 'Formativas', start: 16, end: 30, lookup: [0,45,48,51,53,54,56,57,58,59] },
+          { key: 'Protectoras', start: 31, end: 45, lookup: [0,44,47,50,51,52,54,55,57,58] },
+          { key: 'Reflexivas', start: 46, end: 60, lookup: [0,44,48,50,52,54,55,56,57,59] }
+        ],
+        totalLookup: [0,187,198,205,210,215,219,222,227,231]
+      },
+      '6-7 años': {
+        label: '6–7 años',
+        itemCount: 60,
+        correction: 'normal',
+        areas: [
+          { key: 'Vinculares', start: 1, end: 15, lookup: [0,44,48,50,51,53,54,55,57,59] },
+          { key: 'Formativas', start: 16, end: 30, lookup: [0,44,48,50,51,53,54,55,57,59] },
+          { key: 'Protectoras', start: 31, end: 45, lookup: [0,45,49,51,53,54,56,57,58,59] },
+          { key: 'Reflexivas', start: 46, end: 60, lookup: [0,41,45,48,50,51,53,54,55,58] }
+        ],
+        totalLookup: [0,181,192,200,205,209,214,220,225,231]
+      },
+      '8-12 años': {
+        label: '8–12 años',
+        itemCount: 56,
+        correction: 'normal',
+        areas: [
+          { key: 'Vinculares', start: 1, end: 14, lookup: [0,38,42,44,47,49,51,52,54,55], maxResponded: 14 },
+          { key: 'Formativas', start: 15, end: 29, lookup: [0,45,48,50,51,53,55,56,57,59] },
+          { key: 'Protectoras', start: 30, end: 42, lookup: [0,42,44,46,47,48,49,50,51,52], maxResponded: 13 },
+          { key: 'Reflexivas', start: 43, end: 56, lookup: [0,41,44,46,48,50,51,52,53,55], maxResponded: 14 }
+        ],
+        totalLookup: [0,172,181,190,195,199,203,208,213,218]
+      },
+      '13-17 años': {
+        label: '13–17 años',
+        itemCount: 56,
+        correction: 'normal',
+        areas: [
+          { key: 'Vinculares', start: 1, end: 14, lookup: [0,34,38,41,43,45,47,49,50,53], maxResponded: 14 },
+          { key: 'Formativas', start: 15, end: 29, lookup: [0,37,42,45,48,50,52,54,55,57] },
+          { key: 'Protectoras', start: 30, end: 42, lookup: [0,35,40,42,44,46,47,48,49,50], maxResponded: 13 },
+          { key: 'Reflexivas', start: 43, end: 56, lookup: [0,34,39,42,44,46,48,50,51,53], maxResponded: 14 }
+        ],
+        totalLookup: [0,146,161,171,179,185,193,198,204,211]
+      }
+    };
+
+    let currentAgeGroup = '0-3 meses';
+
+    function getCurrentConfig() {
+      return ageGroups[currentAgeGroup];
+    }
+
+    function correctedScore(score) {
+      if (getCurrentConfig().correction === 'special03') {
+        if (score <= 2) return 2;
+        if (score === 3) return 3;
+        return 4;
+      }
+      return score;
+    }
+
+    function getDecile(score, thresholds) {
+      let decile = '';
+      for (let i = 0; i < thresholds.length; i++) {
+        if (score >= thresholds[i]) decile = i + 1;
+      }
+      return decile;
+    }
+
+    function getCategory(decile) {
+      if (decile === '') return '';
+      if (decile >= 6) return 'Alta frecuencia';
+      if (decile >= 4) return 'Frecuencia intermedia';
+      return 'Baja frecuencia';
+    }
+
+    function normalizarValor(rawValue) {
+      if (rawValue === '') return null;
+      const parsed = parseInt(rawValue, 10);
+      if (Number.isNaN(parsed)) return null;
+      return Math.max(0, Math.min(4, parsed));
+    }
+
+    function limpiarResumen() {
+      document.getElementById('summaryGrid').innerHTML = '';
+      document.getElementById('alertaClinica').textContent = 'Aún sin calcular.';
+      document.getElementById('textoInforme').textContent = 'Aún sin calcular.';
+    }
+
+    function actualizarFila(i) {
+      const input = document.getElementById(`p${i}`);
+      if (!input) return;
+
+      const value = normalizarValor(input.value);
+      const responseCell = document.getElementById(`r${i}`);
+      const correctedCell = document.getElementById(`c${i}`);
+
+      if (value === null) {
+        responseCell.innerHTML = '<span class="small">Sin respuesta</span>';
+        correctedCell.innerHTML = '<span class="small">-</span>';
+        return;
+      }
+
+      input.value = value;
+      responseCell.textContent = responseMap[value];
+      correctedCell.textContent = correctedScore(value);
+    }
+
+    function buildItems() {
+      const container = document.getElementById('itemsContainer');
+      const cfg = getCurrentConfig();
+      let html = '';
+
+      cfg.areas.forEach(area => {
+        html += `<div class="area-title">${area.key} (ítems ${area.start}–${area.end})</div>`;
+        html += `
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Ítem</th>
+                  <th>Puntaje</th>
+                  <th>Respuesta automática</th>
+                  <th>Puntaje corregido</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        for (let i = area.start; i <= area.end; i++) {
+          html += `
+            <tr>
+              <td><strong>Ítem ${i}</strong></td>
+              <td><input type="number" min="0" max="4" id="p${i}" placeholder="0" oninput="actualizarFila(${i})"></td>
+              <td id="r${i}"><span class="small">Sin respuesta</span></td>
+              <td id="c${i}"><span class="small">-</span></td>
+            </tr>
+          `;
+        }
+
+        html += `
+              </tbody>
+            </table>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+      document.getElementById('activeAgePill').textContent = `Tramo activo: ${cfg.label}`;
+      limpiarResumen();
+    }
+
+    function calcularTodo() {
+      const cfg = getCurrentConfig();
+      let totalRespondidos = 0;
+      const resultadosAreas = [];
+
+      for (const area of cfg.areas) {
+        let scoreArea = 0;
+        let respondedArea = 0;
+        const expectedResponded = area.maxResponded || (area.end - area.start + 1);
+
+        for (let i = area.start; i <= area.end; i++) {
+          const input = document.getElementById(`p${i}`);
+          if (!input) continue;
+
+          const value = normalizarValor(input.value);
+          if (value !== null) {
+            respondedArea += 1;
+            totalRespondidos += 1;
+            scoreArea += correctedScore(value);
+          }
+
+          actualizarFila(i);
+        }
+
+        const decile = respondedArea === expectedResponded ? getDecile(scoreArea, area.lookup) : '';
+        const categoria = respondedArea === expectedResponded ? getCategory(decile) : '';
+
+        resultadosAreas.push({
+          area: area.key,
+          respondidos: respondedArea,
+          esperados: expectedResponded,
+          puntaje: scoreArea,
+          decil: decile,
+          categoria: categoria
+        });
+      }
+
+      const totalPuntaje = resultadosAreas.reduce((acc, area) => acc + area.puntaje, 0);
+      const totalDecil = totalRespondidos === cfg.itemCount ? getDecile(totalPuntaje, cfg.totalLookup) : '';
+      const totalCategoria = totalRespondidos === cfg.itemCount ? getCategory(totalDecil) : '';
+
+      let zonaGlobal = 'Completar cuestionario para obtener zona e interpretación.';
+      if (totalRespondidos === cfg.itemCount) {
+        const categorias = resultadosAreas.map(area => area.categoria);
+        const bajas = categorias.filter(cat => cat === 'Baja frecuencia').length;
+        const intermedias = categorias.filter(cat => cat === 'Frecuencia intermedia').length;
+        const altas = categorias.filter(cat => cat === 'Alta frecuencia').length;
+        const vincularBaja = resultadosAreas.find(area => area.area === 'Vinculares')?.categoria === 'Baja frecuencia';
+
+        if (vincularBaja || bajas >= 2) zonaGlobal = 'Zona de Riesgo';
+        else if (bajas === 1 || intermedias >= 2) zonaGlobal = 'Zona de Monitoreo';
+        else if (bajas === 0 && altas >= 3) zonaGlobal = 'Zona Óptima';
+        else zonaGlobal = 'Revisar perfil';
+      }
+
+      let alerta = 'Complete todos los ítems para activar las alertas clínicas.';
+      if (totalRespondidos === cfg.itemCount) {
+        const vinc = resultadosAreas.find(area => area.area === 'Vinculares')?.categoria;
+        const bajas = resultadosAreas.filter(area => area.categoria === 'Baja frecuencia').length;
+        const intermedias = resultadosAreas.filter(area => area.categoria === 'Frecuencia intermedia').length;
+
+        if (vinc === 'Baja frecuencia') {
+          alerta = 'ALERTA CRÍTICA: Competencias vinculares en Baja frecuencia. Esto ubica el perfil en Zona de Riesgo aunque sea la única área descendida.';
+        } else if (bajas >= 2) {
+          alerta = 'ALERTA CRÍTICA: Dos o más áreas en Baja frecuencia. El perfil se ubica en Zona de Riesgo y requiere atención prioritaria.';
+        } else if (bajas === 1) {
+          alerta = 'ALERTA PREVENTIVA: Una sola área no vincular en Baja frecuencia. El perfil se ubica en Zona de Monitoreo.';
+        } else if (intermedias >= 2) {
+          alerta = 'ALERTA PREVENTIVA: Dos o más áreas en Frecuencia intermedia. Se sugiere acompañamiento y reevaluación.';
+        } else {
+          alerta = 'Sin alertas críticas. El perfil no presenta indicadores descendidos de alta preocupación.';
+        }
+      }
+
+      let texto = 'Complete todos los ítems para generar el texto.';
+      if (totalRespondidos === cfg.itemCount) {
+        const vinc = resultadosAreas.find(area => area.area === 'Vinculares')?.categoria;
+        const form = resultadosAreas.find(area => area.area === 'Formativas')?.categoria;
+        const prot = resultadosAreas.find(area => area.area === 'Protectoras')?.categoria;
+        const refl = resultadosAreas.find(area => area.area === 'Reflexivas')?.categoria;
+        texto = `Perfil de competencias parentales del tramo ${cfg.label}: Vinculares (${vinc}), Formativas (${form}), Protectoras (${prot}) y Reflexivas (${refl}). De acuerdo con la tabulación E2P, el perfil global se ubica en ${zonaGlobal}.`;
+      }
+
+      const summaryGrid = document.getElementById('summaryGrid');
+      summaryGrid.innerHTML = `
+        ${resultadosAreas.map(area => `
+          <div class="metric">
+            <div class="label">${area.area}</div>
+            <div class="value">${area.puntaje} pts</div>
+            <div class="small">Respondidos: ${area.respondidos}/${area.esperados}</div>
+            <div class="small">Decil: ${area.decil || '-'} | ${area.categoria || 'Incompleto'}</div>
+          </div>
+        `).join('')}
+        <div class="metric">
+          <div class="label">Total</div>
+          <div class="value">${totalPuntaje} pts</div>
+          <div class="small">Respondidos: ${totalRespondidos}/${cfg.itemCount}</div>
+          <div class="small">Decil: ${totalDecil || '-'} | ${totalCategoria || 'Incompleto'}</div>
+        </div>
+        <div class="metric">
+          <div class="label">Zona global</div>
+          <div class="value">${zonaGlobal}</div>
+        </div>
+      `;
+
+      document.getElementById('alertaClinica').textContent = alerta;
+      document.getElementById('textoInforme').textContent = texto;
+    }
+
+    function limpiarTodo() {
+      const cfg = getCurrentConfig();
+      for (let i = 1; i <= cfg.itemCount; i++) {
+        const input = document.getElementById(`p${i}`);
+        if (!input) continue;
+        input.value = '';
+        document.getElementById(`r${i}`).innerHTML = '<span class="small">Sin respuesta</span>';
+        document.getElementById(`c${i}`).innerHTML = '<span class="small">-</span>';
+      }
+      limpiarResumen();
+    }
+
+    function changeAgeGroup() {
+      currentAgeGroup = document.getElementById('ageSelector').value;
+      buildItems();
+    }
+
+    function runSelfTests() {
+      console.assert(correctedScore(0) === 2, '0–3 meses: 0 debe corregir a 2');
+      console.assert(correctedScore(2) === 2, '0–3 meses: 2 debe corregir a 2');
+      console.assert(correctedScore(4) === 4, '0–3 meses: 4 debe corregir a 4');
+      console.assert(getDecile(48, ageGroups['0-3 meses'].areas[0].lookup) === 2, 'Decil esperado para Vinculares 0–3 con 48');
+      console.assert(getCategory(2) === 'Baja frecuencia', 'Decil 2 debe ser Baja frecuencia');
+      currentAgeGroup = '8-12 años';
+      console.assert(correctedScore(3) === 3, '8–12 años: puntaje corregido debe mantenerse');
+      console.assert(ageGroups['8-12 años'].areas[0].maxResponded === 14, '8–12 años Vinculares debe tener 14 ítems');
+      currentAgeGroup = '0-3 meses';
+    }
+
+    buildItems();
+    runSelfTests();
+  </script>
+</body>
+</html>
