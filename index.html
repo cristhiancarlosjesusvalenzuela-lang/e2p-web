@@ -3,15 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>E2P Web | Todos los rangos etarios</title>
+  <title>E2P Web | Evaluación de Competencias Parentales</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; }
     :root {
-      --bg: #eef4ff;
-      --bg-soft: #f8fbff;
-      --card: rgba(255,255,255,0.82);
-      --card-strong: rgba(255,255,255,0.94);
+      --card: rgba(255,255,255,0.86);
+      --card-strong: rgba(255,255,255,0.96);
       --text: #172033;
       --muted: #667085;
       --line: rgba(148, 163, 184, 0.22);
@@ -72,14 +70,14 @@
 
     header p {
       margin: 0 auto;
-      max-width: 960px;
-      line-height: 1.65;
-      font-size: 1.02rem;
-      opacity: 0.96;
+      max-width: 980px;
+      line-height: 1.7;
+      font-size: 1.04rem;
+      opacity: 0.97;
     }
 
     main {
-      max-width: 1360px;
+      max-width: 1400px;
       margin: -24px auto 0;
       padding: 0 20px 28px;
       position: relative;
@@ -88,7 +86,7 @@
 
     .layout {
       display: grid;
-      grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.9fr);
+      grid-template-columns: minmax(0, 1.55fr) minmax(340px, 0.9fr);
       gap: 22px;
       align-items: start;
     }
@@ -97,7 +95,7 @@
       background: var(--card);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.55);
       border-radius: var(--radius);
       padding: 24px;
       box-shadow: var(--shadow);
@@ -118,6 +116,47 @@
       font-size: 0.98rem;
     }
 
+    .intro-text {
+      margin-top: 8px;
+      color: white;
+      max-width: 980px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .field label {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .field input, .field select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.28);
+      background: rgba(255,255,255,0.96);
+      font-size: 0.98rem;
+      color: var(--text);
+      outline: none;
+    }
+
+    .field input:focus, .field select:focus {
+      border-color: rgba(37,99,235,0.45);
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.10);
+    }
+
     .toolbar {
       display: flex;
       gap: 12px;
@@ -126,7 +165,7 @@
       align-items: center;
     }
 
-    .toolbar button {
+    .toolbar button, .action-buttons button {
       border: none;
       border-radius: 16px;
       padding: 13px 18px;
@@ -136,33 +175,19 @@
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
       color: white;
       box-shadow: 0 10px 20px rgba(37, 99, 235, 0.24);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
 
-    .toolbar button:hover,
-    .action-buttons button:hover {
+    .toolbar button:hover, .action-buttons button:hover {
       transform: translateY(-1px);
       box-shadow: 0 14px 28px rgba(37, 99, 235, 0.28);
     }
 
-    .toolbar button.secondary,
-    .action-buttons button.secondary {
-      background: rgba(255,255,255,0.85);
+    .toolbar button.secondary, .action-buttons button.secondary {
+      background: rgba(255,255,255,0.90);
       color: var(--text);
       border: 1px solid rgba(148, 163, 184, 0.20);
       box-shadow: 0 8px 20px rgba(15, 23, 42, 0.07);
-    }
-
-    .toolbar select {
-      padding: 13px 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(148,163,184,0.25);
-      background: rgba(255,255,255,0.9);
-      font-size: 0.98rem;
-      font-weight: 700;
-      color: #172033;
-      min-width: 240px;
-      box-shadow: 0 10px 22px rgba(15,23,42,0.06);
     }
 
     .pill {
@@ -202,7 +227,7 @@
       border-spacing: 0;
       margin-top: 8px;
       font-size: 0.95rem;
-      background: rgba(255,255,255,0.72);
+      background: rgba(255,255,255,0.78);
       border: 1px solid var(--line);
       border-radius: 18px;
       overflow: hidden;
@@ -216,14 +241,8 @@
     }
 
     tbody tr:last-child td { border-bottom: none; }
-
-    tbody tr:nth-child(even) {
-      background: rgba(248, 250, 252, 0.55);
-    }
-
-    tbody tr:hover {
-      background: rgba(37, 99, 235, 0.045);
-    }
+    tbody tr:nth-child(even) { background: rgba(248, 250, 252, 0.55); }
+    tbody tr:hover { background: rgba(37, 99, 235, 0.045); }
 
     th {
       background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
@@ -289,12 +308,13 @@
       letter-spacing: -0.02em;
     }
 
-    .alert-box, .text-box {
+    .alert-box, .text-box, .report-box {
       margin-top: 16px;
       border-radius: 20px;
       padding: 16px 18px;
       line-height: 1.65;
       box-shadow: 0 12px 24px rgba(15, 23, 42, 0.05);
+      white-space: pre-wrap;
     }
 
     .alert-box {
@@ -305,7 +325,11 @@
     .text-box {
       background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(79,70,229,0.09));
       border: 1px solid rgba(37, 99, 235, 0.16);
-      white-space: pre-wrap;
+    }
+
+    .report-box {
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(148,163,184,0.18);
     }
 
     .action-buttons {
@@ -313,19 +337,6 @@
       gap: 10px;
       flex-wrap: wrap;
       margin-top: 12px;
-    }
-
-    .action-buttons button {
-      border: none;
-      border-radius: 16px;
-      padding: 12px 16px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      cursor: pointer;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
-      color: white;
-      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.24);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
 
     .small {
@@ -336,43 +347,58 @@
 
     @media (max-width: 1024px) {
       .layout { grid-template-columns: 1fr; }
-      .summary-grid { grid-template-columns: 1fr; }
+      .summary-grid, .form-grid { grid-template-columns: 1fr; }
       main { margin-top: -18px; }
     }
 
     @media (max-width: 680px) {
       .card { padding: 18px; border-radius: 20px; }
       header { padding: 42px 18px 40px; }
-      .toolbar button, .toolbar select, .action-buttons button { width: 100%; }
+      .toolbar button, .toolbar select, .action-buttons button, .field input, .field select { width: 100%; }
       input[type="number"] { width: 76px; }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>E2P Web por rango etario</h1>
-    <p>Versión web construida desde tu Excel. Incluye herramientas para 0–3 meses, 4–10 meses, 11–18 meses, 19–36 meses, 3–5 años, 6–7 años, 8–12 años y 13–17 años.</p>
+    <h1>E2P Web</h1>
+    <p class="intro-text">La Escala de Evaluación de Competencias Parentales, E2P, es un instrumento orientado a valorar competencias vinculares, formativas, protectoras y reflexivas en adultos responsables del cuidado de niños, niñas y adolescentes. Esta versión web permite registrar puntajes, obtener resultados automáticos y generar un texto útil para incorporar en informes profesionales.</p>
   </header>
 
   <main>
     <div class="layout">
       <section class="card">
-        <h2>Ingreso de puntajes por tramo</h2>
-        <p class="muted">La página cambia de herramienta según el rango etario. Por ahora usa <strong>ítem 1–n</strong> porque el archivo no trae visibles los enunciados en esta vista, pero la lógica de cálculo sí está incorporada.</p>
+        <h2>Datos de identificación</h2>
 
-        <div class="toolbar" style="margin-top:12px; margin-bottom:4px;">
-          <select id="ageSelector" onchange="changeAgeGroup()">
-            <option value="0-3 meses">0–3 meses</option>
-            <option value="4-10 meses">4–10 meses</option>
-            <option value="11-18 meses">11–18 meses</option>
-            <option value="19-36 meses">19–36 meses</option>
-            <option value="3-5 años">3–5 años</option>
-            <option value="6-7 años">6–7 años</option>
-            <option value="8-12 años">8–12 años</option>
-            <option value="13-17 años">13–17 años</option>
-          </select>
-          <span class="pill" id="activeAgePill">Tramo activo: 0–3 meses</span>
+        <div class="form-grid">
+          <div class="field">
+            <label for="nombreEvaluada">Nombre de la adulta evaluada</label>
+            <input type="text" id="nombreEvaluada" placeholder="Ej. María González" />
+          </div>
+          <div class="field">
+            <label for="edadEvaluada">Edad</label>
+            <input type="number" id="edadEvaluada" min="0" placeholder="Ej. 34" />
+          </div>
+          <div class="field">
+            <label for="parentescoEvaluada">Parentesco</label>
+            <input type="text" id="parentescoEvaluada" placeholder="Ej. Madre, abuela, tía" />
+          </div>
+          <div class="field">
+            <label for="ageSelector">Rango etario del instrumento</label>
+            <select id="ageSelector" onchange="changeAgeGroup()">
+              <option value="0-3 meses">0–3 meses</option>
+              <option value="4-10 meses">4–10 meses</option>
+              <option value="11-18 meses">11–18 meses</option>
+              <option value="19-36 meses">19–36 meses</option>
+              <option value="3-5 años">3–5 años</option>
+              <option value="6-7 años">6–7 años</option>
+              <option value="8-12 años">8–12 años</option>
+              <option value="13-17 años">13–17 años</option>
+            </select>
+          </div>
         </div>
+
+        <span class="pill" id="activeAgePill">Tramo activo: 0–3 meses</span>
 
         <div class="toolbar">
           <button onclick="calcularTodo()">Calcular resultado</button>
@@ -388,15 +414,14 @@
           <div class="summary-grid" id="summaryGrid"></div>
           <div class="alert-box" id="alertaClinica">Aún sin calcular.</div>
           <div class="text-box" id="textoInforme">Aún sin calcular.</div>
+
+          <h3 style="margin-top:18px;">Cuadro para informe</h3>
+          <div class="report-box" id="cuadroInforme">Aún sin calcular.</div>
+
           <div class="action-buttons">
             <button onclick="copiarInforme()">Copiar informe</button>
             <button class="secondary" onclick="descargarPDF()">Descargar PDF</button>
           </div>
-        </section>
-
-        <section class="card">
-          <h3>Qué ya está hecho</h3>
-          <p class="small">✔ Selector de rango etario<br>✔ Respuesta automática<br>✔ Puntaje corregido según tramo<br>✔ Deciles por tramo<br>✔ Categorías por área<br>✔ Zona global<br>✔ Alerta clínica<br>✔ Texto breve para informe<br>✔ Copiar informe<br>✔ Descargar PDF</p>
         </section>
       </aside>
     </div>
@@ -425,88 +450,67 @@
         totalLookup: [0,196,204,212,216,221,225,228,230,235]
       },
       '4-10 meses': {
-        label: '4–10 meses',
-        itemCount: 60,
-        correction: 'normal',
+        label: '4–10 meses', itemCount: 60, correction: 'normal',
         areas: [
           { key: 'Vinculares', start: 1, end: 15, lookup: [0,49,52,55,56,57,57,58,59,60] },
           { key: 'Formativas', start: 16, end: 30, lookup: [0,46,49,52,53,54,55,57,58,59] },
           { key: 'Protectoras', start: 31, end: 45, lookup: [0,45,49,51,52,54,55,56,58,59] },
           { key: 'Reflexivas', start: 46, end: 60, lookup: [0,43,46,50,51,53,54,56,57,59] }
-        ],
-        totalLookup: [0,190,201,207,212,217,221,225,228,233]
+        ], totalLookup: [0,190,201,207,212,217,221,225,228,233]
       },
       '11-18 meses': {
-        label: '11–18 meses',
-        itemCount: 60,
-        correction: 'normal',
+        label: '11–18 meses', itemCount: 60, correction: 'normal',
         areas: [
           { key: 'Vinculares', start: 1, end: 15, lookup: [0,51,53,55,56,58,58,59,60,60] },
           { key: 'Formativas', start: 16, end: 30, lookup: [0,47,50,52,54,55,56,57,58,59] },
           { key: 'Protectoras', start: 31, end: 45, lookup: [0,48,51,52,54,55,56,57,58,59] },
           { key: 'Reflexivas', start: 46, end: 60, lookup: [0,43,45,48,50,51,53,55,56,58] }
-        ],
-        totalLookup: [0,191,203,209,214,218,222,225,228,233]
+        ], totalLookup: [0,191,203,209,214,218,222,225,228,233]
       },
       '19-36 meses': {
-        label: '19–36 meses',
-        itemCount: 60,
-        correction: 'normal',
+        label: '19–36 meses', itemCount: 60, correction: 'normal',
         areas: [
           { key: 'Vinculares', start: 1, end: 15, lookup: [0,45,49,50,52,53,54,56,57,59] },
           { key: 'Formativas', start: 16, end: 30, lookup: [0,42,46,48,50,52,54,55,57,58] },
           { key: 'Protectoras', start: 31, end: 45, lookup: [0,43,47,48,50,51,53,54,56,58] },
           { key: 'Reflexivas', start: 46, end: 60, lookup: [0,40,45,47,49,51,52,54,55,57] }
-        ],
-        totalLookup: [0,174,187,196,202,207,211,217,222,229]
+        ], totalLookup: [0,174,187,196,202,207,211,217,222,229]
       },
       '3-5 años': {
-        label: '3–5 años',
-        itemCount: 60,
-        correction: 'normal',
+        label: '3–5 años', itemCount: 60, correction: 'normal',
         areas: [
           { key: 'Vinculares', start: 1, end: 15, lookup: [0,47,50,52,54,55,56,57,58,59] },
           { key: 'Formativas', start: 16, end: 30, lookup: [0,45,48,51,53,54,56,57,58,59] },
           { key: 'Protectoras', start: 31, end: 45, lookup: [0,44,47,50,51,52,54,55,57,58] },
           { key: 'Reflexivas', start: 46, end: 60, lookup: [0,44,48,50,52,54,55,56,57,59] }
-        ],
-        totalLookup: [0,187,198,205,210,215,219,222,227,231]
+        ], totalLookup: [0,187,198,205,210,215,219,222,227,231]
       },
       '6-7 años': {
-        label: '6–7 años',
-        itemCount: 60,
-        correction: 'normal',
+        label: '6–7 años', itemCount: 60, correction: 'normal',
         areas: [
           { key: 'Vinculares', start: 1, end: 15, lookup: [0,44,48,50,51,53,54,55,57,59] },
           { key: 'Formativas', start: 16, end: 30, lookup: [0,44,48,50,51,53,54,55,57,59] },
           { key: 'Protectoras', start: 31, end: 45, lookup: [0,45,49,51,53,54,56,57,58,59] },
           { key: 'Reflexivas', start: 46, end: 60, lookup: [0,41,45,48,50,51,53,54,55,58] }
-        ],
-        totalLookup: [0,181,192,200,205,209,214,220,225,231]
+        ], totalLookup: [0,181,192,200,205,209,214,220,225,231]
       },
       '8-12 años': {
-        label: '8–12 años',
-        itemCount: 56,
-        correction: 'normal',
+        label: '8–12 años', itemCount: 56, correction: 'normal',
         areas: [
           { key: 'Vinculares', start: 1, end: 14, lookup: [0,38,42,44,47,49,51,52,54,55], maxResponded: 14 },
           { key: 'Formativas', start: 15, end: 29, lookup: [0,45,48,50,51,53,55,56,57,59] },
           { key: 'Protectoras', start: 30, end: 42, lookup: [0,42,44,46,47,48,49,50,51,52], maxResponded: 13 },
           { key: 'Reflexivas', start: 43, end: 56, lookup: [0,41,44,46,48,50,51,52,53,55], maxResponded: 14 }
-        ],
-        totalLookup: [0,172,181,190,195,199,203,208,213,218]
+        ], totalLookup: [0,172,181,190,195,199,203,208,213,218]
       },
       '13-17 años': {
-        label: '13–17 años',
-        itemCount: 56,
-        correction: 'normal',
+        label: '13–17 años', itemCount: 56, correction: 'normal',
         areas: [
           { key: 'Vinculares', start: 1, end: 14, lookup: [0,34,38,41,43,45,47,49,50,53], maxResponded: 14 },
           { key: 'Formativas', start: 15, end: 29, lookup: [0,37,42,45,48,50,52,54,55,57] },
           { key: 'Protectoras', start: 30, end: 42, lookup: [0,35,40,42,44,46,47,48,49,50], maxResponded: 13 },
           { key: 'Reflexivas', start: 43, end: 56, lookup: [0,34,39,42,44,46,48,50,51,53], maxResponded: 14 }
-        ],
-        totalLookup: [0,146,161,171,179,185,193,198,204,211]
+        ], totalLookup: [0,146,161,171,179,185,193,198,204,211]
       }
     };
 
@@ -551,12 +555,12 @@
       document.getElementById('summaryGrid').innerHTML = '';
       document.getElementById('alertaClinica').textContent = 'Aún sin calcular.';
       document.getElementById('textoInforme').textContent = 'Aún sin calcular.';
+      document.getElementById('cuadroInforme').textContent = 'Aún sin calcular.';
     }
 
     function actualizarFila(i) {
       const input = document.getElementById(`p${i}`);
       if (!input) return;
-
       const value = normalizarValor(input.value);
       const responseCell = document.getElementById(`r${i}`);
       const correctedCell = document.getElementById(`c${i}`);
@@ -604,11 +608,7 @@
           `;
         }
 
-        html += `
-              </tbody>
-            </table>
-          </div>
-        `;
+        html += `</tbody></table></div>`;
       });
 
       container.innerHTML = html;
@@ -616,8 +616,17 @@
       limpiarResumen();
     }
 
+    function obtenerDatosIdentificacion() {
+      return {
+        nombre: document.getElementById('nombreEvaluada').value.trim(),
+        edad: document.getElementById('edadEvaluada').value.trim(),
+        parentesco: document.getElementById('parentescoEvaluada').value.trim()
+      };
+    }
+
     function calcularTodo() {
       const cfg = getCurrentConfig();
+      const datos = obtenerDatosIdentificacion();
       let totalRespondidos = 0;
       const resultadosAreas = [];
 
@@ -629,8 +638,8 @@
         for (let i = area.start; i <= area.end; i++) {
           const input = document.getElementById(`p${i}`);
           if (!input) continue;
-
           const value = normalizarValor(input.value);
+
           if (value !== null) {
             respondedArea += 1;
             totalRespondidos += 1;
@@ -649,7 +658,7 @@
           esperados: expectedResponded,
           puntaje: scoreArea,
           decil: decile,
-          categoria: categoria
+          categoria
         });
       }
 
@@ -691,12 +700,33 @@
       }
 
       let texto = 'Complete todos los ítems para generar el texto.';
+      let cuadro = 'Aún sin calcular.';
       if (totalRespondidos === cfg.itemCount) {
         const vinc = resultadosAreas.find(area => area.area === 'Vinculares')?.categoria;
         const form = resultadosAreas.find(area => area.area === 'Formativas')?.categoria;
         const prot = resultadosAreas.find(area => area.area === 'Protectoras')?.categoria;
         const refl = resultadosAreas.find(area => area.area === 'Reflexivas')?.categoria;
+
         texto = `Perfil de competencias parentales del tramo ${cfg.label}: Vinculares (${vinc}), Formativas (${form}), Protectoras (${prot}) y Reflexivas (${refl}). De acuerdo con la tabulación E2P, el perfil global se ubica en ${zonaGlobal}.`;
+
+        cuadro = `Nombre de la adulta evaluada: ${datos.nombre || 'No ingresado'}
+Edad: ${datos.edad || 'No ingresada'}
+Parentesco: ${datos.parentesco || 'No ingresado'}
+Rango etario evaluado: ${cfg.label}
+
+Resultados por área:
+- Vinculares: ${vinc}
+- Formativas: ${form}
+- Protectoras: ${prot}
+- Reflexivas: ${refl}
+
+Puntaje total: ${totalPuntaje}
+Decil total: ${totalDecil || '-'}
+Categoría total: ${totalCategoria || '-'}
+Zona global: ${zonaGlobal}
+
+Síntesis para informe:
+${texto}`;
       }
 
       const summaryGrid = document.getElementById('summaryGrid');
@@ -723,10 +753,15 @@
 
       document.getElementById('alertaClinica').textContent = alerta;
       document.getElementById('textoInforme').textContent = texto;
+      document.getElementById('cuadroInforme').textContent = cuadro;
     }
 
     function limpiarTodo() {
       const cfg = getCurrentConfig();
+      document.getElementById('nombreEvaluada').value = '';
+      document.getElementById('edadEvaluada').value = '';
+      document.getElementById('parentescoEvaluada').value = '';
+
       for (let i = 1; i <= cfg.itemCount; i++) {
         const input = document.getElementById(`p${i}`);
         if (!input) continue;
@@ -743,20 +778,19 @@
     }
 
     function copiarInforme() {
-      const texto = document.getElementById('textoInforme').textContent;
-      if (!texto || texto === 'Aún sin calcular.' || texto === 'Complete todos los ítems para generar el texto.') {
+      const texto = document.getElementById('cuadroInforme').textContent;
+      if (!texto || texto === 'Aún sin calcular.') {
         alert('Primero debes calcular un resultado.');
         return;
       }
-
       navigator.clipboard.writeText(texto)
-        .then(() => alert('Informe copiado al portapapeles.'))
+        .then(() => alert('Cuadro de informe copiado al portapapeles.'))
         .catch(() => alert('No se pudo copiar automáticamente.'));
     }
 
     async function descargarPDF() {
-      const texto = document.getElementById('textoInforme').textContent;
-      if (!texto || texto === 'Aún sin calcular.' || texto === 'Complete todos los ítems para generar el texto.') {
+      const texto = document.getElementById('cuadroInforme').textContent;
+      if (!texto || texto === 'Aún sin calcular.') {
         alert('Primero debes calcular un resultado.');
         return;
       }
@@ -768,19 +802,15 @@
 
       doc.setFont('helvetica', 'bold');
       doc.setFontSize(16);
-      doc.text('Informe E2P', 15, 20);
+      doc.text('Resultados E2P', 15, 20);
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(11);
       doc.text(`Tramo etario: ${cfg.label}`, 15, 30);
       doc.text(`Fecha: ${new Date().toLocaleDateString('es-CL')}`, 15, 38);
+      doc.text(lineas, 15, 50);
 
-      doc.setFontSize(12);
-      doc.text('Texto breve para informe:', 15, 50);
-      doc.setFontSize(11);
-      doc.text(lineas, 15, 60);
-
-      doc.save(`informe-e2p-${cfg.label.replace(/\s+/g, '-').replace(/–/g, '-')}.pdf`);
+      doc.save(`resultado-e2p-${cfg.label.replace(/\s+/g, '-').replace(/–/g, '-')}.pdf`);
     }
 
     function runSelfTests() {
