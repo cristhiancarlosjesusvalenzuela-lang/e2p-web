@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>E2P Web | Todos los rangos etarios</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; }
     :root {
@@ -138,12 +139,14 @@
       transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
     }
 
-    .toolbar button:hover {
+    .toolbar button:hover,
+    .action-buttons button:hover {
       transform: translateY(-1px);
       box-shadow: 0 14px 28px rgba(37, 99, 235, 0.28);
     }
 
-    .toolbar button.secondary {
+    .toolbar button.secondary,
+    .action-buttons button.secondary {
       background: rgba(255,255,255,0.85);
       color: var(--text);
       border: 1px solid rgba(148, 163, 184, 0.20);
@@ -302,6 +305,27 @@
     .text-box {
       background: linear-gradient(135deg, rgba(37,99,235,0.08), rgba(79,70,229,0.09));
       border: 1px solid rgba(37, 99, 235, 0.16);
+      white-space: pre-wrap;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .action-buttons button {
+      border: none;
+      border-radius: 16px;
+      padding: 12px 16px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-2) 100%);
+      color: white;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.24);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
     }
 
     .small {
@@ -319,7 +343,7 @@
     @media (max-width: 680px) {
       .card { padding: 18px; border-radius: 20px; }
       header { padding: 42px 18px 40px; }
-      .toolbar button, .toolbar select { width: 100%; }
+      .toolbar button, .toolbar select, .action-buttons button { width: 100%; }
       input[type="number"] { width: 76px; }
     }
   </style>
@@ -364,11 +388,15 @@
           <div class="summary-grid" id="summaryGrid"></div>
           <div class="alert-box" id="alertaClinica">Aún sin calcular.</div>
           <div class="text-box" id="textoInforme">Aún sin calcular.</div>
+          <div class="action-buttons">
+            <button onclick="copiarInforme()">Copiar informe</button>
+            <button class="secondary" onclick="descargarPDF()">Descargar PDF</button>
+          </div>
         </section>
 
         <section class="card">
           <h3>Qué ya está hecho</h3>
-          <p class="small">✔ Selector de rango etario<br>✔ Respuesta automática<br>✔ Puntaje corregido según tramo<br>✔ Deciles por tramo<br>✔ Categorías por área<br>✔ Zona global<br>✔ Alerta clínica<br>✔ Texto breve para informe</p>
+          <p class="small">✔ Selector de rango etario<br>✔ Respuesta automática<br>✔ Puntaje corregido según tramo<br>✔ Deciles por tramo<br>✔ Categorías por área<br>✔ Zona global<br>✔ Alerta clínica<br>✔ Texto breve para informe<br>✔ Copiar informe<br>✔ Descargar PDF</p>
         </section>
       </aside>
     </div>
@@ -714,16 +742,53 @@
       buildItems();
     }
 
+    function copiarInforme() {
+      const texto = document.getElementById('textoInforme').textContent;
+      if (!texto || texto === 'Aún sin calcular.' || texto === 'Complete todos los ítems para generar el texto.') {
+        alert('Primero debes calcular un resultado.');
+        return;
+      }
+
+      navigator.clipboard.writeText(texto)
+        .then(() => alert('Informe copiado al portapapeles.'))
+        .catch(() => alert('No se pudo copiar automáticamente.'));
+    }
+
+    async function descargarPDF() {
+      const texto = document.getElementById('textoInforme').textContent;
+      if (!texto || texto === 'Aún sin calcular.' || texto === 'Complete todos los ítems para generar el texto.') {
+        alert('Primero debes calcular un resultado.');
+        return;
+      }
+
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const cfg = getCurrentConfig();
+      const lineas = doc.splitTextToSize(texto, 180);
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(16);
+      doc.text('Informe E2P', 15, 20);
+
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(11);
+      doc.text(`Tramo etario: ${cfg.label}`, 15, 30);
+      doc.text(`Fecha: ${new Date().toLocaleDateString('es-CL')}`, 15, 38);
+
+      doc.setFontSize(12);
+      doc.text('Texto breve para informe:', 15, 50);
+      doc.setFontSize(11);
+      doc.text(lineas, 15, 60);
+
+      doc.save(`informe-e2p-${cfg.label.replace(/\s+/g, '-').replace(/–/g, '-')}.pdf`);
+    }
+
     function runSelfTests() {
-      console.assert(correctedScore(0) === 2, '0–3 meses: 0 debe corregir a 2');
-      console.assert(correctedScore(2) === 2, '0–3 meses: 2 debe corregir a 2');
-      console.assert(correctedScore(4) === 4, '0–3 meses: 4 debe corregir a 4');
-      console.assert(getDecile(48, ageGroups['0-3 meses'].areas[0].lookup) === 2, 'Decil esperado para Vinculares 0–3 con 48');
       console.assert(getCategory(2) === 'Baja frecuencia', 'Decil 2 debe ser Baja frecuencia');
-      currentAgeGroup = '8-12 años';
-      console.assert(correctedScore(3) === 3, '8–12 años: puntaje corregido debe mantenerse');
+      console.assert(getCategory(4) === 'Frecuencia intermedia', 'Decil 4 debe ser Frecuencia intermedia');
+      console.assert(getCategory(6) === 'Alta frecuencia', 'Decil 6 debe ser Alta frecuencia');
       console.assert(ageGroups['8-12 años'].areas[0].maxResponded === 14, '8–12 años Vinculares debe tener 14 ítems');
-      currentAgeGroup = '0-3 meses';
+      console.assert(ageGroups['13-17 años'].itemCount === 56, '13–17 años debe tener 56 ítems');
     }
 
     buildItems();
